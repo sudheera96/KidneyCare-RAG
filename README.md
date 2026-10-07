@@ -2,89 +2,104 @@
 
 ## Grounded CKD Education Assistant
 
-KidneyCare RAG is a Retrieval-Augmented Generation (RAG) application designed to provide **grounded, educational information about Chronic Kidney Disease (CKD)** using a fixed collection of local healthcare documents.
+KidneyCare RAG is a retrieval-augmented generation (RAG) application designed to provide **grounded educational information about chronic kidney disease (CKD)** using a fixed collection of local healthcare documents.
 
-The project was developed as a Human-Computer Interaction (HCI) group project. The application combines document retrieval, semantic search, open-source language generation, and a simple Gradio interface so users can ask CKD-related questions and see the sources used to support the response.
+The application retrieves relevant passages from local CKD documents, provides those passages as context to a language model, and presents the generated answer together with the retrieved sources.
 
-> **Educational use only:** KidneyCare RAG is not a diagnostic or clinical decision-support system. It does not diagnose conditions, prescribe medications, provide individualized treatment plans, or replace professional medical advice.
+> **Educational use only.** KidneyCare RAG does not diagnose conditions, prescribe medications, provide individualized treatment plans, or replace professional medical advice.
 
-## Project Overview
+## Project Objective
 
-The goal of KidneyCare RAG is to demonstrate how a grounded AI assistant can improve access to healthcare education while reducing unsupported responses through retrieval from a controlled document collection.
+The project demonstrates how a healthcare-focused RAG system can combine:
+
+- Local healthcare documents
+- Text extraction and preprocessing
+- Semantic embeddings
+- FAISS vector search
+- Retrieval-grounded generation
+- A Gradio user interface
+- Source and similarity-score reporting
+- Evaluation of supported and unsupported questions
+
+The project intentionally uses a **static local document collection** rather than live web search or runtime website access.
+
+---
+
+## How It Works
 
 The application follows this workflow:
 
-1. Load local CKD healthcare documents.
-2. Extract text from PDF documents.
-3. Clean and divide the text into overlapping chunks.
-4. Generate semantic embeddings using Sentence Transformers.
-5. Store the embeddings in a FAISS vector index.
-6. Retrieve the most relevant document chunks for a user question.
-7. Provide the retrieved context to an open-source Hugging Face language model.
-8. Generate a grounded educational response.
-9. Display the answer together with the retrieved document sources and similarity scores.
-10. Reject questions when the available CKD documents do not contain sufficient relevant information.
+```text
+Local CKD PDF documents
+        ↓
+PDF text extraction
+        ↓
+Text cleaning and chunking
+        ↓
+Sentence Transformer embeddings
+        ↓
+FAISS vector index
+        ↓
+Relevant document retrieval
+        ↓
+Hugging Face language model
+        ↓
+Grounded answer
+        ↓
+Answer + retrieved sources
+        ↓
+Gradio interface
+```
 
-## Application Screenshot
+### RAG Components
 
-The following screenshot shows the working KidneyCare RAG Gradio interface running locally.
+1. **Document loading** — extracts text from local PDF documents.
+2. **Chunking** — divides document text into smaller overlapping sections.
+3. **Embedding generation** — converts chunks into semantic vectors using Sentence Transformers.
+4. **Vector retrieval** — FAISS retrieves the most relevant chunks for a user's question.
+5. **Answer generation** — the retrieved context is supplied to the language model.
+6. **Grounding check** — questions with insufficient retrieval relevance are rejected.
+7. **User interface** — Gradio displays the answer and retrieved source information.
 
-![KidneyCare RAG user interface](docs/kidneycare-ui.png)
-
-**Interface:** The application provides a CKD question field, an **Ask KidneyCare** button, an answer/source area, and an educational-use disclaimer.
-
-## Key Features
-
-- **Local-document RAG:** Answers are grounded in the project's local healthcare document collection.
-- **Semantic retrieval:** Sentence Transformers and FAISS are used to identify relevant passages.
-- **Source transparency:** Retrieved source documents, page numbers, and similarity scores are shown with the response.
-- **Out-of-scope rejection:** Questions unrelated to the available CKD knowledge base can be rejected rather than answered from general/current information.
-- **Simple HCI:** A Gradio interface allows users to interact with the system without using the command line.
-- **Reproducible setup:** Source code, requirements, evaluation questions, tests, and document-source information are included in the repository.
-- **No live web search:** The application does not scrape websites or perform live web searches at runtime.
+---
 
 ## Technology Stack
 
 | Component | Technology |
 |---|---|
-| Programming language | Python |
-| User interface | Gradio |
-| PDF processing | pypdf |
-| Text embeddings | Sentence Transformers (`all-MiniLM-L6-v2`) |
-| Vector database/index | FAISS |
-| Language model | Hugging Face Transformers (`google/flan-t5-base`) |
-| ML framework | PyTorch |
+| Language | Python |
+| User Interface | Gradio |
+| PDF Processing | pypdf |
+| Embeddings | Sentence Transformers |
+| Embedding Model | `sentence-transformers/all-MiniLM-L6-v2` |
+| Vector Database | FAISS |
+| Generation Model | `google/flan-t5-base` |
+| Deep Learning | PyTorch |
 | Testing | pytest |
-| Source control | Git / GitHub |
+| Evaluation | Custom Python evaluation script |
 
-## Data Sources
+---
 
-The knowledge base uses a fixed set of local CKD documents from authoritative healthcare organizations. The current project data directory contains:
-
-- `CDC_CKD_2026.pdf`
-- `CDC_CKD_Factsheet.pdf`
-- `CDC_CKD_2023.pdf`
-- `NIDDK_CKD_Guide.pdf`
-
-The source information and official source references are documented in:
-
-`data/SOURCES.md`
-
-No patient records or personal medical information are required by the application.
-
-## Repository Structure
+## Project Structure
 
 ```text
 KidneyCare-RAG/
-├── .github/
-│   └── workflows/
-│       └── validate.yml
+│
 ├── data/
+│   ├── CDC_CKD_2026.pdf
+│   ├── CDC_CKD_Factsheet.pdf
+│   ├── CDC_CKD_2023.pdf
+│   ├── NIDDK_CKD_Guide.pdf
 │   ├── README.md
 │   └── SOURCES.md
+│
+├── docs/
+│   └── kidneycare-ui.png
+│
 ├── evaluation/
-│   ├── evaluate.py
-│   └── questions.json
+│   ├── questions.json
+│   └── evaluate.py
+│
 ├── src/
 │   ├── __init__.py
 │   ├── app.py
@@ -92,23 +107,35 @@ KidneyCare-RAG/
 │   ├── document_loader.py
 │   ├── rag_pipeline.py
 │   └── vector_store.py
+│
 ├── tests/
 │   └── test_basic.py
+│
+├── .github/
+│   └── workflows/
+│       └── validate.yml
+│
 ├── .gitignore
 ├── README.md
+├── EVALUATION.md
 └── requirements.txt
 ```
 
-### Main source files
+---
 
-- `src/document_loader.py` — loads PDF/text documents and represents extracted content as document chunks.
-- `src/chunker.py` — creates overlapping text chunks for retrieval.
-- `src/vector_store.py` — creates Sentence Transformer embeddings and the FAISS similarity index.
-- `src/rag_pipeline.py` — connects retrieval and language generation into the RAG workflow.
-- `src/app.py` — launches the Gradio user interface.
-- `evaluation/evaluate.py` — runs the predefined evaluation questions through the RAG pipeline.
-- `evaluation/questions.json` — contains supported CKD questions and out-of-scope questions.
-- `tests/test_basic.py` — basic document-loading and chunking tests.
+## Healthcare Source Documents
+
+The current local knowledge base contains CKD documents from authoritative healthcare sources, including CDC and NIDDK materials.
+
+The source list and source information are documented in:
+
+```text
+data/SOURCES.md
+```
+
+The application does not perform live web searches during question answering.
+
+---
 
 ## Installation
 
@@ -121,14 +148,17 @@ cd KidneyCare-RAG
 
 ### 2. Create a virtual environment
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks script execution for the virtual environment, use the appropriate Python/PowerShell execution-policy setting for your local environment.
+Activate it:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
 ### 3. Install dependencies
 
@@ -137,63 +167,117 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-The first execution may download the Sentence Transformers embedding model and the Hugging Face generation model.
+---
 
 ## Run the Application
 
-From the project root, run:
+From the repository root:
 
 ```powershell
 python -m src.app
 ```
 
-Gradio will start a local web interface. Open the local URL shown in the terminal, typically similar to:
+The Gradio application will start locally.
+
+Open the local URL shown in the terminal, typically similar to:
 
 ```text
 http://127.0.0.1:7860
 ```
 
-The application initializes the document collection, builds the retrieval index, loads the language model, and then allows the user to submit CKD questions.
+### Example Questions
 
-### Example questions
+Supported CKD questions include:
 
-Questions within the intended scope include:
+```text
+What is chronic kidney disease?
+```
 
-- What is chronic kidney disease?
-- What are common risk factors for chronic kidney disease?
-- How is chronic kidney disease tested or detected?
-- What can people do to help prevent chronic kidney disease?
-- What does CKD management generally involve?
+```text
+What are common risk factors for chronic kidney disease?
+```
 
-Questions that require information outside the local CKD document collection should be rejected rather than answered using live/current information.
+```text
+How is chronic kidney disease tested or detected?
+```
+
+```text
+What does CKD management generally involve?
+```
+
+Questions unrelated to the local CKD knowledge base should be rejected rather than answered from outside information.
+
+---
+
+## Application Screenshot
+
+The following screenshot shows the working KidneyCare RAG Gradio interface running locally.
+
+![KidneyCare RAG user interface](docs/kidneycare-ui.png)
+
+The interface provides:
+
+- A CKD question field
+- An **Ask KidneyCare** button
+- An answer and source area
+- An educational-use disclaimer
+
+---
 
 ## Evaluation
 
-The project includes a small evaluation set covering both supported and unsupported questions.
+The project includes a separate evaluation report documenting the evaluation questions, generated answers, retrieved sources, similarity scores, observations, and limitations.
 
-Run the evaluation from the project root with:
+### Evaluation Report
+
+**[View the complete Evaluation Report →](EVALUATION.md)**
+
+The evaluation contains:
+
+- **5 supported CKD questions**
+- **3 unsupported/out-of-scope questions**
+- Retrieved document sources
+- Page numbers
+- Similarity scores
+- Generated answers
+- Evaluation observations
+- Retrieval score summary
+- Limitations and future improvements
+
+Run the evaluation with:
 
 ```powershell
 python -m evaluation.evaluate
 ```
 
-The evaluation reports:
+The evaluation questions are stored in:
 
-- The question asked.
-- Whether the question is expected to be supported by the knowledge base.
-- The generated answer.
-- Retrieved source documents.
-- Source page numbers.
-- Retrieval similarity scores.
+```text
+evaluation/questions.json
+```
 
-### Evaluation categories
+---
 
-The current evaluation set contains:
+## Evaluation Summary
 
-- **5 supported CKD questions** covering CKD definition, risk factors, detection/testing, prevention, and management.
-- **3 unsupported questions** covering current stock prices, recent sports results, and lottery numbers.
+The current evaluation demonstrates that the retrieval layer generally distinguishes CKD-related questions from unrelated questions.
 
-The unsupported questions are intentionally outside the application's static CKD knowledge base and are used to evaluate whether the system appropriately refuses to answer when sufficient relevant information is unavailable.
+Observed retrieval similarity ranges:
+
+| Question Category | Observed Similarity Range |
+|---|---:|
+| Supported CKD questions | Approximately 0.64–0.79 |
+| Unsupported questions | Approximately 0.03–0.16 |
+
+The unsupported questions were correctly rejected with the message:
+
+> The available KidneyCare documents do not provide enough relevant information to answer this question.
+
+The detailed results and individual question outputs are documented in **[EVALUATION.md](EVALUATION.md)**.
+
+The evaluation is a functional and retrieval-grounding assessment. It should not be interpreted as clinical validation or a formal clinical accuracy study.
+
+---
 
 ## Testing
 
@@ -203,79 +287,68 @@ Run the automated tests with:
 python -m pytest -q
 ```
 
-The GitHub Actions workflow also performs source compilation, dependency installation, and pytest validation.
+The GitHub Actions workflow also performs basic source validation and testing.
 
-## Why RAG?
-
-A general-purpose language model can produce fluent answers even when it does not have the appropriate evidence. KidneyCare RAG instead retrieves relevant passages from a controlled collection of CKD documents before generating an answer.
-
-This approach provides three important benefits for the project:
-
-1. **Grounding** — responses are based on retrieved project documents.
-2. **Traceability** — users can see which documents and pages were retrieved.
-3. **Scope control** — the application can decline questions that are not sufficiently supported by the local knowledge base.
-
-## HCI Considerations
-
-The interface was designed around a simple question-and-answer interaction:
-
-- A clear application title communicates the purpose.
-- The input field provides an example CKD question.
-- A single primary action, **Ask KidneyCare**, submits the question.
-- The answer and supporting sources are presented together.
-- A visible educational-use disclaimer communicates the system's limitations.
-
-The source display is particularly important for healthcare education because it gives users visibility into the documents used by the retrieval pipeline rather than presenting an unsupported answer without context.
+---
 
 ## Safety and Scope
 
-KidneyCare RAG is intentionally limited to **CKD education**.
+KidneyCare RAG is intentionally limited to educational CKD information.
 
-The application does **not**:
+The system does **not**:
 
-- Diagnose a patient.
-- Interpret an individual's medical records.
-- Prescribe or recommend medications.
-- Create individualized treatment plans.
-- Replace a physician, nurse, dietitian, pharmacist, or other qualified healthcare professional.
-- Provide live medical or current-event information.
-- Perform live web searches or website scraping.
+- Diagnose conditions
+- Prescribe medications
+- Recommend individualized treatment plans
+- Analyze personal medical records
+- Provide live/current information outside the local document collection
+- Replace professional medical advice
 
-Users should consult qualified healthcare professionals for personal medical questions or decisions.
+The application is designed to demonstrate grounded AI and human-computer interaction concepts in a healthcare education setting.
+
+---
 
 ## Reproducibility
 
-To reproduce the project:
+The project is structured so that another user can:
 
 1. Clone the GitHub repository.
-2. Create and activate a Python virtual environment.
-3. Install `requirements.txt`.
-4. Ensure the required local CKD documents are available in `data/`.
-5. Run `python -m src.app` to launch the application.
-6. Run `python -m evaluation.evaluate` to reproduce the evaluation workflow.
-7. Run `python -m pytest -q` to execute the automated tests.
+2. Create a Python virtual environment.
+3. Install the requirements.
+4. Use the included local CKD documents.
+5. Run the Gradio application.
+6. Run the evaluation script.
+7. Run the automated tests.
 
-The project does not require a live external healthcare API for the RAG workflow.
+The main components are separated into document loading, chunking, vector retrieval, RAG generation, application UI, evaluation, and tests.
 
-## GitHub Repository
+---
 
-**Repository:** https://github.com/sudheera96/KidneyCare-RAG
+## Repository
+
+**GitHub:**  
+https://github.com/sudheera96/KidneyCare-RAG
+
+---
 
 ## Project Deliverables
 
-The repository contains the main components needed to demonstrate the proposed system:
+This repository contains the primary implementation artifacts for the KidneyCare RAG group project:
 
 - RAG source code
-- Local-document loading and preprocessing
-- FAISS vector retrieval
-- Hugging Face generation
-- Gradio HCI interface
-- Evaluation questions and evaluation script
+- Gradio application
+- Local healthcare document collection
+- Source documentation
+- Evaluation questions
+- Evaluation script
 - Automated tests
-- Dependency specification
-- Healthcare source documentation
 - GitHub Actions validation workflow
+- Application screenshot
+- Project README
+- Detailed evaluation report
 
-## Important Note
+---
 
-This project is an academic prototype intended to demonstrate grounded information retrieval, natural-language interaction, and human-computer interaction for healthcare education. It should not be used as a clinical system or as a substitute for professional medical advice.
+## License / Academic Use
+
+This repository was developed as an academic project for demonstrating retrieval-augmented generation, healthcare information grounding, and human-computer interaction concepts.
