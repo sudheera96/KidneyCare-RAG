@@ -24,6 +24,9 @@ The project demonstrates how a healthcare-focused RAG system can combine:
 The project intentionally uses a **static local document collection** rather than live web search or runtime website access.
 
 ---
+## System Architecture
+
+[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/sudheera96/kidneycare-rag?utm_source=readme&utm_medium=badge)
 
 ## How It Works
 
