@@ -1,0 +1,11 @@
+KidneyCare demonstration knowledge base
+
+Chronic kidney disease (CKD) is a condition in which the kidneys are damaged or have a structural problem that reduces their ability to filter blood properly. Waste and extra fluid can build up in the body.
+
+CKD often develops slowly and may have few or no noticeable symptoms in its early stages. Blood and urine testing can help detect kidney disease. Risk is higher for people with conditions such as diabetes, high blood pressure, heart disease, or a family history of kidney disease.
+
+Healthy habits and management of conditions that contribute to CKD can help protect kidney health. Examples include controlling blood pressure and blood sugar when appropriate, maintaining a healthy weight, staying physically active, avoiding tobacco, and following guidance from healthcare professionals.
+
+CKD can worsen over time and may lead to kidney failure. Early detection and appropriate management can help slow progression.
+
+This file is a small demonstration knowledge base derived from the official CDC and NIDDK CKD educational material listed in SOURCES.md. For the final class demonstration, additional downloaded source documents should be added to this folder and documented in SOURCES.md.
