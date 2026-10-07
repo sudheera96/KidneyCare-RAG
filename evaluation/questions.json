@@ -1,0 +1,10 @@
+[
+  {"question":"What is chronic kidney disease?","supported":true},
+  {"question":"What are common risk factors for chronic kidney disease?","supported":true},
+  {"question":"How is chronic kidney disease tested or detected?","supported":true},
+  {"question":"What can people do to help prevent chronic kidney disease?","supported":true},
+  {"question":"What does CKD management generally involve?","supported":true},
+  {"question":"What is the current stock price of Apple?","supported":false},
+  {"question":"Who won the latest Super Bowl?","supported":false},
+  {"question":"What are the lottery numbers for tonight?","supported":false}
+]
